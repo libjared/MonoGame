@@ -25,7 +25,7 @@
       dotnet-runtime = pkgs.dotnetCorePackages.runtime_6_0;
       projectFile = "MonoGame.Framework/MonoGame.Framework.DesktopGL.csproj";
       nugetDeps = ./monogamedesktopgl-deps.nix;
-      version = "3.8.0.1642";
+      version = "3.8.0.6000";
       packNupkg = true;
       executables = [];
     };
