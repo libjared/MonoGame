@@ -3,7 +3,7 @@
 	url = git@github.com:MonoGame/MonoGame.Dependencies.git
 [submodule "ThirdParty/NVorbis"]
 	path = ThirdParty/NVorbis
-	url = git@github.com:MrHelmut/NVorbis.git
+	url = git@github.com:NVorbis/NVorbis.git
 [submodule "ThirdParty/SDL_GameControllerDB"]
 	path = ThirdParty/SDL_GameControllerDB
 	url = git@github.com:gabomdq/SDL_GameControllerDB.git
