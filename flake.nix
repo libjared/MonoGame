@@ -21,11 +21,13 @@
     monogamedesktopgl = pkgs.buildDotnetModule {
       pname = name;
       src = nixlessSource;
+      dotnet-sdk = pkgs.dotnetCorePackages.sdk_6_0;
+      dotnet-runtime = pkgs.dotnetCorePackages.runtime_6_0;
       projectFile = "MonoGame.Framework/MonoGame.Framework.DesktopGL.csproj";
       nugetDeps = ./monogamedesktopgl-deps.nix;
       version = "3.8.0.1642";
-      executables = [];
       packNupkg = true;
+      executables = [];
     };
 
   in {
