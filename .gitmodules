@@ -4,6 +4,3 @@
 [submodule "ThirdParty/SDL_GameControllerDB"]
 	path = ThirdParty/SDL_GameControllerDB
 	url = git@github.com:gabomdq/SDL_GameControllerDB.git
-[submodule "ThirdParty/StbImageWriteSharp"]
-	path = ThirdParty/StbImageWriteSharp
-	url = git@github.com:StbSharp/StbImageWriteSharp.git
