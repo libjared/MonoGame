@@ -7,25 +7,25 @@
     pkgs = import nixpkgs {
       inherit system;
     };
-    baseName = "monogamedesktopgl";
+    name = "monogamedesktopgl";
 
     nixlessSource = pkgs.lib.sources.cleanSourceWith {
+      inherit name;
       src = self;
-      name = baseName;
       filter = name: type: let baseFileName = baseNameOf (toString name); in ! (
         pkgs.lib.hasSuffix ".nix" baseFileName ||
         baseFileName == "flake.lock"
       );
     };
 
-    monogamedesktopgl = pkgs.stdenvNoCC.mkDerivation {
-      inherit baseName;
+    monogamedesktopgl = pkgs.buildDotnetModule {
+      pname = name;
       src = nixlessSource;
+      projectFile = "MonoGame.Framework/MonoGame.Framework.DesktopGL.csproj";
+      nugetDeps = ./monogamedesktopgl-deps.nix;
       version = "3.8.0.1642";
-
-      buildPhase = ''
-        dotnet pack
-      '';
+      executables = [];
+      packNupkg = true;
     };
 
   in {
