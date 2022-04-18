@@ -1,3 +1,0 @@
-[submodule "ThirdParty/Dependencies"]
-	path = ThirdParty/Dependencies
-	url = git@github.com:MonoGame/MonoGame.Dependencies.git
