@@ -1,6 +1,6 @@
 # vim: set et sw=2 ts=2 number:
 {
-  description = "Monogame";
+  description = "One framework for creating powerful cross-platform games.";
 
   outputs = { self, nixpkgs }: let
     system = "x86_64-linux";
