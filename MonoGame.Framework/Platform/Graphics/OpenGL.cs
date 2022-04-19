@@ -1440,7 +1440,6 @@ namespace MonoGame.OpenGL
 
         internal static void LoadExtensions()
         {
-            Console.WriteLine("Trying to load extensions!");
             string extstring = GL.GetString(StringName.Extensions);
             var error = GL.GetError();
             if (!string.IsNullOrEmpty(extstring) && error == ErrorCode.NoError)
@@ -1453,7 +1452,7 @@ namespace MonoGame.OpenGL
                 GL.LoadFrameBufferObjectEXTEntryPoints();
             }
             if (GL.RenderbufferStorageMultisample == null)
-            {
+            {                
                 if (Extensions.Contains("GL_APPLE_framebuffer_multisample"))
                 {
                     GL.RenderbufferStorageMultisample = LoadFunction<GL.RenderbufferStorageMultisampleDelegate>("glRenderbufferStorageMultisampleAPPLE");
@@ -1530,7 +1529,6 @@ namespace MonoGame.OpenGL
 
         internal unsafe static string GetString (StringName name)
         {
-            Console.WriteLine("GetString called with " + name + "!");
             return Marshal.PtrToStringAnsi (GetStringInternal (name));
         }
 
