@@ -1277,7 +1277,7 @@ namespace MonoGame.OpenGL
             EnableVertexAttribArray = LoadFunction<EnableVertexAttribArrayDelegate> ("glEnableVertexAttribArray");
             DisableVertexAttribArray = LoadFunction<DisableVertexAttribArrayDelegate> ("glDisableVertexAttribArray");
             GetIntegerv = LoadFunction<GetIntegerDelegate> ("glGetIntegerv");
-            GetStringInternal = LoadFunction<GetStringDelegate> ("glGetString", true);
+            GetStringInternal = LoadFunction<GetStringDelegate> ("glGetString");
             ClearDepth = LoadFunction<ClearDepthDelegate> ("glClearDepth");
             if (ClearDepth == null)
                 ClearDepth = LoadFunction<ClearDepthDelegate> ("glClearDepthf");
@@ -1530,8 +1530,7 @@ namespace MonoGame.OpenGL
 
         internal unsafe static string GetString (StringName name)
         {
-            Console.WriteLine("GetString called with: " + name + "!");
-            Console.WriteLine("GetStringInternal is: " + GetStringInternal + "!");
+            Console.WriteLine("GetString called with " + name + "!");
             IntPtr ptrResult = GetStringInternal (name);
             Console.WriteLine("Got a pointer: " + ptrResult + "!");
             string result = Marshal.PtrToStringAnsi (ptrResult);
