@@ -1531,11 +1531,7 @@ namespace MonoGame.OpenGL
         internal unsafe static string GetString (StringName name)
         {
             Console.WriteLine("GetString called with " + name + "!");
-            IntPtr ptrResult = GetStringInternal (name);
-            Console.WriteLine("Got a pointer: " + ptrResult + "!");
-            string result = Marshal.PtrToStringAnsi (ptrResult);
-            Console.WriteLine("The returned string is: " + result + "!");
-            return result;
+            return Marshal.PtrToStringAnsi (GetStringInternal (name));
         }
 
         protected static IntPtr MarshalStringArrayToPtr (string[] strings)
