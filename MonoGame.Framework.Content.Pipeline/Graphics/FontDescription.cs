@@ -19,6 +19,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
         private float spacing;
         private FontDescriptionStyle style;
         private bool useKerning;
+		private bool aliased;
 	    private ICollection<char> characters = new HashSet<char>();
 
 		/// <summary>
@@ -87,6 +88,22 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
                 useKerning = value;
             }
         }
+
+		/// <summary>
+		/// Indicates if the font should be rendered with no smoothing.
+		/// </summary>
+		[ContentSerializer(Optional = true)]
+		public bool Aliased
+		{
+			get
+			{
+				return aliased;
+			}
+			set
+			{
+				aliased = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the style of the font, expressed as a combination of one or more FontDescriptionStyle flags.

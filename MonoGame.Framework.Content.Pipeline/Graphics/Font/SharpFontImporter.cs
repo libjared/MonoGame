@@ -43,7 +43,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
                     uint glyphIndex = face.GetCharIndex(character);
                     if (!glyphMaps.TryGetValue(glyphIndex, out GlyphData glyphData))
                     {
-                        glyphData = ImportGlyph(glyphIndex, face);
+                        glyphData = ImportGlyph(glyphIndex, face, options.Aliased);
                         glyphMaps.Add(glyphIndex, glyphData);
                     }
 
@@ -96,10 +96,10 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
         }
 
         // Rasterizes a single character glyph.
-        private GlyphData ImportGlyph(uint glyphIndex, Face face)
+        private GlyphData ImportGlyph(uint glyphIndex, Face face, bool aliased)
         {
-            face.LoadGlyph(glyphIndex, LoadFlags.Default, LoadTarget.Normal);
-            face.Glyph.RenderGlyph(RenderMode.Normal);
+	        face.LoadGlyph(glyphIndex, LoadFlags.Default, LoadTarget.Normal);
+	        face.Glyph.RenderGlyph(aliased ? RenderMode.Mono : RenderMode.Normal);
 
             // Render the character.
             BitmapContent glyphBitmap = null;
