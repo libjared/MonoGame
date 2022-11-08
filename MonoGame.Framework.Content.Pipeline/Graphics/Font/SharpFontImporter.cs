@@ -98,8 +98,8 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
         // Rasterizes a single character glyph.
         private GlyphData ImportGlyph(uint glyphIndex, Face face, bool aliased)
         {
-	        face.LoadGlyph(glyphIndex, LoadFlags.Default, LoadTarget.Normal);
-	        face.Glyph.RenderGlyph(aliased ? RenderMode.Mono : RenderMode.Normal);
+            face.LoadGlyph(glyphIndex, LoadFlags.Default, LoadTarget.Normal);
+            face.Glyph.RenderGlyph(aliased ? RenderMode.Mono : RenderMode.Normal);
 
             // Render the character.
             BitmapContent glyphBitmap = null;
@@ -107,33 +107,48 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             {
                 glyphBitmap = new PixelBitmapContent<byte>(face.Glyph.Bitmap.Width, face.Glyph.Bitmap.Rows);
                 byte[] gpixelAlphas = new byte[face.Glyph.Bitmap.Width * face.Glyph.Bitmap.Rows];
-                //if the character bitmap has 1bpp we have to expand the buffer data to get the 8bpp pixel data
-                //each byte in bitmap.bufferdata contains the value of to 8 pixels in the row
-                //if bitmap is of width 10, each row has 2 bytes with 10 valid bits, and the last 6 bits of 2nd byte must be discarded
+                // If the character bitmap has 1bpp we have to expand the buffer data to get the 8bpp pixel data.
+                // 1bpp glyphs always have an even number of bytes per row regardless of the width of the glyph, so they may contain unused padding bytes they need to be skipped.
+                // The absolute value of bitmap.Pitch is the number of bytes per row.
+                // Each non-padding byte in bitmap.Buffer contains the values of up to 8 pixels.
+                // If bitmap is of width 10, each row has 2 bytes with 10 valid bits, and the last 6 bits of 2nd byte must be discarded.
+                // If bitmap.Pitch is negative the row order of the glyph is reversed (ie. glyph bitmap data is upside down).
+                // Note: The reason for using IntPtr to read bitmap.Buffer is because the bitmap.BufferData array may be truncated when a glyph is narrow (bug in SharpFont?)
                 if (face.Glyph.Bitmap.PixelMode == PixelMode.Mono)
                 {
-                    //variables needed for the expansion, amount of written data, length of the data to write
-                    int written = 0, length = face.Glyph.Bitmap.Width * face.Glyph.Bitmap.Rows;
-                    for (int i = 0; written < length; i++)
+                    // offset into bitmap.Buffer
+                    int bufferOffset = 0;
+                    // the offset in gpixelAlphas to the current row
+                    int rowOffset = face.Glyph.Bitmap.Pitch < 0 ? (face.Glyph.Bitmap.Rows - 1) * face.Glyph.Bitmap.Width : 0;
+                    // the amount to increment/decrement rowOffset for each row
+                    int rowOffsetInc = face.Glyph.Bitmap.Pitch / Math.Abs(face.Glyph.Bitmap.Pitch) * face.Glyph.Bitmap.Width;
+                    for (int i = 0; i < face.Glyph.Bitmap.Rows; i++)
                     {
-                        //width in pixels of each row
-                        int width = face.Glyph.Bitmap.Width;
-                        while (width > 0)
+                        // get pointer to this row of the bitmap buffer
+                        IntPtr bufferPtr = IntPtr.Add(face.Glyph.Bitmap.Buffer, bufferOffset);
+
+                        // width in pixels of each row
+                        int width = face.Glyph.Bitmap.Width, xOffset = 0;
+                        while(width > 0)
                         {
-                            //valid data in the current byte
+                            // number of bits that contain valid data in the current byte
                             int stride = MathHelper.Min(8, width);
-                            //copy the valid bytes to pixeldata
-                            //System.Array.Copy(ExpandByte(face.Glyph.Bitmap.BufferData[i]), 0, gpixelAlphas, written, stride);
-                            ExpandByteAndCopy(face.Glyph.Bitmap.BufferData[i], stride, gpixelAlphas, written);
-                            written += stride;
+                            // read the next byte from the buffer
+                            byte b = Marshal.ReadByte(bufferPtr);
+                            // expand each bit to a byte and copy to pixeldata
+                            ExpandByteAndCopy(b, stride, gpixelAlphas, rowOffset + xOffset);
+                            xOffset += stride;
                             width -= stride;
-                            if (width > 0)
-                                i++;
+                            bufferPtr = IntPtr.Add(bufferPtr, 1);
                         }
+                        // Move to the start of the next row.
+                        bufferOffset += Math.Abs(face.Glyph.Bitmap.Pitch);
+                        rowOffset += rowOffsetInc;
                     }
                 }
                 else
                     Marshal.Copy(face.Glyph.Bitmap.Buffer, gpixelAlphas, 0, gpixelAlphas.Length);
+
                 glyphBitmap.SetPixelData(gpixelAlphas);
             }
 
