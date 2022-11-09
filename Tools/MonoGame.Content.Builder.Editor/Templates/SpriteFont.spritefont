@@ -32,6 +32,12 @@ with.
     <UseKerning>true</UseKerning>
 
     <!--
+    Aliased is a boolean value. The default is false. Set this to true to render fonts
+    without smoothing, to simulate classic XNA's appearance.
+    -->
+    <Aliased>false</Aliased>
+
+    <!--
     Style controls the style of the font. Valid entries are "Regular", "Bold", "Italic",
     and "Bold, Italic", and are case sensitive.
     -->
