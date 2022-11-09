@@ -98,7 +98,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
         // Rasterizes a single character glyph.
         private GlyphData ImportGlyph(uint glyphIndex, Face face, bool aliased)
         {
-            face.LoadGlyph(glyphIndex, LoadFlags.Default, LoadTarget.Normal);
+            face.LoadGlyph(glyphIndex, LoadFlags.Default, aliased ? LoadTarget.Mono : LoadTarget.Normal);
             face.Glyph.RenderGlyph(aliased ? RenderMode.Mono : RenderMode.Normal);
 
             // Render the character.
@@ -147,7 +147,8 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
                     }
                 }
                 else
-                    Marshal.Copy(face.Glyph.Bitmap.Buffer, gpixelAlphas, 0, gpixelAlphas.Length);
+                    throw new Exception("Hell naw");
+                    // Marshal.Copy(face.Glyph.Bitmap.Buffer, gpixelAlphas, 0, gpixelAlphas.Length);
 
                 glyphBitmap.SetPixelData(gpixelAlphas);
             }
@@ -183,7 +184,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
 
 
         /// <summary>
-        /// Reads each individual bit of a byte from left to right and expands it to a full byte, 
+        /// Reads each individual bit of a byte from left to right and expands it to a full byte,
         /// ones get byte.maxvalue, and zeros get byte.minvalue.
         /// </summary>
         /// <param name="origin">Byte to expand and copy</param>
