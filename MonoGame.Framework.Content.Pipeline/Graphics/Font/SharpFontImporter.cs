@@ -78,6 +78,8 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             {
                 const uint dpi = 96;
                 var face = lib.NewFace(fontName, 0);
+                Console.WriteLine($"There are {face.FaceCount} faces in the font \"{fontName}\"");
+                Console.WriteLine($"DPI={dpi}, HasFixedSizes={face.HasFixedSizes}, FixedSizesCount={face.FixedSizesCount}, AvailableSizes={(face.AvailableSizes == null ? "null" : face.AvailableSizes.Length)}, HasKerning={face.HasKerning}");
                 var fixedSize = ((int)options.Size) << 6;
                 face.SetCharSize(0, fixedSize, dpi, dpi);
 
@@ -98,7 +100,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
         // Rasterizes a single character glyph.
         private GlyphData ImportGlyph(uint glyphIndex, Face face, bool aliased)
         {
-            face.LoadGlyph(glyphIndex, LoadFlags.Default, aliased ? LoadTarget.Mono : LoadTarget.Normal);
+            face.LoadGlyph(glyphIndex, aliased ? LoadFlags.Monochrome : LoadFlags.Default, aliased ? LoadTarget.Mono : LoadTarget.Normal);
             face.Glyph.RenderGlyph(aliased ? RenderMode.Mono : RenderMode.Normal);
 
             // Render the character.
